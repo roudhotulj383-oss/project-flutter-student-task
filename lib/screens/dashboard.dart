@@ -1,4 +1,4 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -18,16 +18,8 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   final user = FirebaseAuth.instance.currentUser;
 
-  // currentIndex sekarang benar-benar dipakai untuk switch tab lewat
-  // IndexedStack di bawah — sebelumnya variabel ini ada tapi tidak
-  // pernah dibaca di mana pun (bottom nav onPressed-nya kosong).
   int currentIndex = 0;
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // TAB 0: HOME — isi aslinya Dashboard (StreamBuilder tasks, header,
-  // kartu "Today's tasks", dst). Dipindah jadi widget terpisah supaya
-  // bisa dipasang sebagai salah satu child IndexedStack.
-  // ═══════════════════════════════════════════════════════════════════════
   Widget _buildHomeTab() {
     return SafeArea(
       child: StreamBuilder<QuerySnapshot>(
@@ -41,10 +33,7 @@ class _DashboardPageState extends State<DashboardPage> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // Tampilkan error SUNGGUHAN secara jelas (misalnya permission
-          // Firestore ditolak, atau field "date" hilang di beberapa
-          // dokumen lama sehingga orderBy("date") gagal) — daripada
-          // disamarkan jadi "Tidak ada data" yang menyesatkan.
+    
           if (snapshot.hasError) {
             return Center(
               child: Padding(
@@ -70,9 +59,8 @@ class _DashboardPageState extends State<DashboardPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  //---------------------------------
+                  
                   // HEADER
-                  //---------------------------------
                   Row(
                     children: [
                       Image.asset(
@@ -100,9 +88,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
                   const SizedBox(height: 35),
 
-                  //---------------------------------
-                  // HELLO
-                  //---------------------------------
+                  
                   Text(
                     "Hello, ${user?.displayName ?? user?.email?.split('@')[0]}",
                     style: const TextStyle(
@@ -118,9 +104,9 @@ class _DashboardPageState extends State<DashboardPage> {
 
                   const SizedBox(height: 25),
 
-                  //---------------------------------
+                  
                   // CARD
-                  //---------------------------------
+                
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -170,9 +156,9 @@ class _DashboardPageState extends State<DashboardPage> {
 
                   const SizedBox(height: 35),
 
-                  //---------------------------------
-                  // UPCOMING
-                  //---------------------------------
+                  
+            
+                  
                   Row(
                     children: [
                       const Text(
@@ -189,9 +175,8 @@ class _DashboardPageState extends State<DashboardPage> {
 
                   const SizedBox(height: 20),
 
-                  //---------------------------------
                   // EMPTY
-                  //---------------------------------
+                  
                   if (tasks.isEmpty)
                     SizedBox(
                       height: 300,
@@ -235,17 +220,11 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // ITEM TASK — swipe kiri untuk hapus (dengan konfirmasi), tombol edit
-  // untuk ubah title/category/date lewat dialog ringkas.
-  // ═══════════════════════════════════════════════════════════════════════
   Widget _buildTaskItem(QueryDocumentSnapshot task) {
     return Dismissible(
       key: ValueKey(task.id),
       direction: DismissDirection.endToStart,
-      // confirmDismiss menahan swipe sampai user mengonfirmasi di dialog —
-      // kalau user batal, item otomatis kembali ke posisi semula (tidak
-      // benar-benar terhapus dari list sampai Firestore delete berhasil).
+  
       confirmDismiss: (_) => _confirmDeleteTask(task),
       onDismissed: (_) => _deleteTask(task),
       background: Container(
@@ -285,7 +264,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  // ─── DIALOG: KONFIRMASI HAPUS (dipanggil sebelum Dismissible commit) ────
+  
   Future<bool> _confirmDeleteTask(QueryDocumentSnapshot task) async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -351,16 +330,14 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
-  // ─── DIALOG: EDIT TASK (ringkas — title, category, date) ────────────────
+  
   Future<void> _editTaskDialog(QueryDocumentSnapshot task) async {
     final titleController =
         TextEditingController(text: task["title"] ?? '');
     final categoryController =
         TextEditingController(text: task["category"] ?? '');
 
-    // Field "date" disimpan sebagai String ISO (yyyy-MM-dd) oleh
-    // add_task.dart — di-parse di sini supaya date picker bisa
-    // menampilkan tanggal yang sedang tersimpan sebagai nilai awal.
+
     DateTime selectedDate =
         DateTime.tryParse(task["date"]?.toString() ?? '') ?? DateTime.now();
     final formKey = GlobalKey<FormState>();
@@ -448,9 +425,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       if (!formKey.currentState!.validate()) return;
                       setDialogState(() => isSaving = true);
                       try {
-                        // Format ISO (yyyy-MM-dd) disamakan dengan format
-                        // yang ditulis add_task.dart, supaya orderBy("date")
-                        // di Dashboard tetap urut kronologis dengan benar.
+                        
                         final year =
                             selectedDate.year.toString().padLeft(4, '0');
                         final month =
@@ -513,10 +488,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Tiga tab: Home, Calendar, Settings — semuanya berbagi SATU Scaffold
-    // di sini lewat IndexedStack. CalendarPage & SettingsScreen sengaja
-    // tidak punya Scaffold/AppBar sendiri (lihat komentar di file masing-
-    // masing), supaya Material ancestor mereka datang dari Scaffold ini.
+    
     final tabs = [
       _buildHomeTab(),
       const CalendarPage(),
@@ -531,8 +503,7 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
 
       bottomNavigationBar: BottomAppBar(
-        // Shape default (rata, tanpa notch) karena tidak ada FAB
-        // melayang lagi yang perlu "dudukan" di tengah bar.
+       
         child: SizedBox(
           height: 65,
           child: Row(
@@ -552,9 +523,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   color: currentIndex == 1 ? Colors.blue : Colors.grey,
                 ),
               ),
-              // Add Task — sejajar seperti 3 tombol lain, bukan FAB
-              // melayang lagi. Tetap Navigator.push (bukan ganti tab)
-              // karena ini form input, bukan halaman navigasi biasa.
+              
               IconButton(
                 onPressed: () {
                   Navigator.push(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'firebase_options.dart';
 import 'theme_notif.dart';
 
 import 'screens/welcome.dart';
@@ -9,16 +8,12 @@ import 'screens/Auth/login.dart';
 import 'screens/Auth/register.dart';
 import 'screens/dashboard.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp();
 
-  // Muat preferensi mode gelap yang tersimpan sebelum app dijalankan
   await ThemeNotifier.loadTheme();
-  
 
   runApp(const MyApp());
 }
@@ -52,12 +47,9 @@ class MyApp extends StatelessWidget {
 
           routes: {
             '/': (context) => const WelcomeTo(),
-
             '/login': (context) => const LoginScreen(),
-
             '/register': (context) => const RegisterScreen(),
-
-            '/dashboard': (context) => const DashboardPage (),
+            '/dashboard': (context) => const DashboardPage(),
           },
         );
       },

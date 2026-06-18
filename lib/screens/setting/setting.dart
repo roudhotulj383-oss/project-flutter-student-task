@@ -4,13 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../theme_notif.dart';
-// ⚠️ Sesuaikan path relatif ini ke lokasi notification_service.dart yang
-// sebenarnya di project kamu (sama seperti yang dipakai add_task.dart).
 import '../../services/notification_services.dart';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SETTINGS SCREEN
-// ═══════════════════════════════════════════════════════════════════════════
+//════════════════
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -69,9 +67,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.dispose();
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // AMBIL DATA PROFIL DARI FIRESTORE SESUAI USER YANG LOGIN
-  // ═══════════════════════════════════════════════════════════════════════
 
   Future<void> _loadUserProfile() async {
     final user = _auth.currentUser;
@@ -82,7 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       return;
     }
 
-    // Isi email duluan dari Firebase Auth (selalu akurat & real-time)
+    
     _emailController.text = user.email ?? '';
 
     try {
@@ -110,9 +105,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // SIMPAN PERUBAHAN PROFIL KE FIRESTORE
-  // ═══════════════════════════════════════════════════════════════════════
 
   Future<void> _saveUserProfile() async {
     final user = _auth.currentUser;
@@ -135,9 +127,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // BUILD
-  // ═══════════════════════════════════════════════════════════════════════
+  
 
   @override
   Widget build(BuildContext context) {
@@ -670,9 +660,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Icon(icon, color: color, size: 20),
       );
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // DIALOG & PICKER
-  // ═══════════════════════════════════════════════════════════════════════
+  
 
   void _showEditProfileDialog() {
     showDialog(
@@ -916,12 +904,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // HAPUS SEMUA TUGAS MILIK USER YANG LOGIN DARI FIRESTORE
-  //
-  // Tugas disimpan di collection 'tasks' dengan field 'uid' berisi uid
-  // pemilik tugas (samakan dengan query di dashboard.dart & add_task.dart).
-  // ═══════════════════════════════════════════════════════════════════════
 
   Future<void> _deleteAllTasks() async {
     final user = _auth.currentUser;
@@ -1024,9 +1006,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  // ═══════════════════════════════════════════════════════════════════════
-  // UBAH KATA SANDI (re-autentikasi dulu, baru update password baru)
-  // ═══════════════════════════════════════════════════════════════════════
+  
 
   void _showChangePasswordDialog() {
     final currentPasswordController = TextEditingController();

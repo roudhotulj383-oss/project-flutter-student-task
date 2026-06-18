@@ -39,12 +39,7 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
 
-    // Catatan: tidak ada Scaffold/AppBar di sini lagi — halaman ini dipakai
-    // sebagai salah satu tab di dalam Scaffold milik DashboardPage (lewat
-    // IndexedStack), bukan halaman terpisah yang di-push. FloatingActionButton
-    // yang dulu ada di sini juga dipindah jadi tombol "+" kecil di sebelah
-    // judul tanggal, supaya tidak berebut posisi dengan FAB "Add Task"
-    // milik Dashboard.
+    
     return Container(
       color: Colors.grey[200],
       child: Column(
@@ -155,8 +150,7 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 
-  /// DIALOG TAMBAH TASK (logikanya sama seperti sebelumnya, cuma
-  /// pemicunya sekarang tombol "+" di sebelah judul tanggal)
+  /// DIALOG TAMBAH TASK (
   void _showAddTaskDialog(BuildContext context) {
     showDialog(
       context: context,

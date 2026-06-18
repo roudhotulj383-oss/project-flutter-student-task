@@ -1,7 +1,3 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// File: lib/firebase_options.dart
-// Auto-generated config untuk project: student-task-82be2
-// ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
@@ -20,7 +16,7 @@ class DefaultFirebaseOptions {
     }
   }
 
-  // ── WEB ───────────────────────────────────────────────────────────────────
+  // ── WEB ─────────────────────────────────────────────────────────────────
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: "AIzaSyBhtEvSahK09PMVKGifcBaHS-sOvi8jhxY",
     authDomain: "student-task-82be2.firebaseapp.com",
@@ -32,7 +28,7 @@ class DefaultFirebaseOptions {
   );
 
   // ── ANDROID ───────────────────────────────────────────────────────────────
-  // Pastikan google-services.json sudah ada di android/app/
+  
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: "AIzaSyBhtEvSahK09PMVKGifcBaHS-sOvi8jhxY",
     authDomain: "student-task-82be2.firebaseapp.com",
@@ -43,7 +39,7 @@ class DefaultFirebaseOptions {
   );
 
   // ── iOS ───────────────────────────────────────────────────────────────────
-  // Pastikan GoogleService-Info.plist sudah ada di ios/Runner/
+  
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: "AIzaSyBhtEvSahK09PMVKGifcBaHS-sOvi8jhxY",
     authDomain: "student-task-82be2.firebaseapp.com",

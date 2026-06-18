@@ -17,12 +17,9 @@ class _CC {
   static Color inputFill(bool d)   => d ? const Color(0xFF2A2A40) : const Color(0xFFF8F9FF);
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// MAIN PAGE
-// ═══════════════════════════════════════════════════════════════════════════
+
 class CategoryPage extends StatefulWidget {
-  // [selectMode] true  → halaman ini dipakai untuk memilih kategori (dari AddTask)
-  // [selectMode] false → halaman manajemen kategori biasa
+  
   final bool selectMode;
   const CategoryPage({super.key, this.selectMode = false});
 
@@ -282,7 +279,7 @@ class _CategoryPageState extends State<CategoryPage>
     );
   }
 
-  // ─── DIALOG: EDIT ─────────────────────────────────────────────────────────
+  
   Future<void> _showEditDialog(
       String id, String curName, String curDesc) async {
     final nameCtrl = TextEditingController(text: curName);
@@ -409,7 +406,7 @@ class _CategoryPageState extends State<CategoryPage>
     );
   }
 
-  // ─── DIALOG: HAPUS ────────────────────────────────────────────────────────
+  
   Future<void> _showDeleteDialog(
       String id, String name, int taskCount) async {
     final isDark  = Theme.of(context).brightness == Brightness.dark;
@@ -578,7 +575,7 @@ class _CategoryPageState extends State<CategoryPage>
     );
   }
 
-  // ─── BUILD ────────────────────────────────────────────────────────────────
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -735,9 +732,6 @@ class _CategoryPageState extends State<CategoryPage>
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// CATEGORY CARD
-// ═══════════════════════════════════════════════════════════════════════════
 class _CategoryCard extends StatelessWidget {
   final bool isDark;
   final String id;
@@ -864,10 +858,10 @@ class _CategoryCard extends StatelessWidget {
             ),
             const SizedBox(width: 8),
 
-            // ── Aksi ─────────────────────────────────
+      
             Column(
               children: [
-                // ✅ Tombol + pilih kategori (selectMode) ATAU edit (manajemen)
+                
                 _ActionBtn(
                   icon: selectMode
                       ? Icons.add_circle_rounded
@@ -877,7 +871,7 @@ class _CategoryCard extends StatelessWidget {
                   onTap: selectMode ? onSelect : onEdit,
                 ),
                 const SizedBox(height: 8),
-                // Tombol edit (hanya tampil saat selectMode agar tetap bisa edit)
+                
                 if (selectMode)
                   _ActionBtn(
                     icon: Icons.edit_rounded,
@@ -892,7 +886,7 @@ class _CategoryCard extends StatelessWidget {
                     isDark: isDark,
                     onTap: onDelete,
                   ),
-                // Tombol hapus (hanya di mode manajemen, sudah di atas)
+                
                 if (selectMode) ...[
                   const SizedBox(height: 8),
                   _ActionBtn(

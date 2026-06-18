@@ -2,23 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Services/notification_services.dart';
 
-// ═══════════════════════════════════════════════════════════════════════════
-// NOTIFICATION BELL — pengganti CircleAvatar(Icons.notifications_none) yang
-// statis di header DashboardPage. Cara pakai (lihat dashboard.dart):
-//
-//   NotificationBell(snapshot: snapshot.data!)
-//
-// Widget ini TIDAK membuka koneksi Firestore sendiri — dia memakai ulang
-// QuerySnapshot yang sama yang sudah didengarkan oleh StreamBuilder di
-// DashboardPage (collection 'tasks', filter field 'uid'), supaya tidak ada
-// listener Firestore dobel.
-//
-// CATATAN PENTING:
-// - File ini meng-import '../Services/notification_service.dart' (SINGULAR,
-//   huruf S besar sesuai folder kamu). Pastikan TIDAK ada lagi file bernama
-//   'notification_services.dart' (PLURAL) di folder Services — hapus file
-//   itu kalau masih ada, supaya tidak ada dua service yang membingungkan.
-// ═══════════════════════════════════════════════════════════════════════════
 
 class NotificationBell extends StatefulWidget {
   final QuerySnapshot<Object?> snapshot;
@@ -30,9 +13,7 @@ class NotificationBell extends StatefulWidget {
 }
 
 class _NotificationBellState extends State<NotificationBell> {
-  // NotificationService adalah singleton (factory constructor),
-  // jadi panggilan ini selalu mengembalikan instance yang sama
-  // dengan yang dipakai di SettingsScreen, dsb.
+  
   final _notifService = NotificationService();
   bool _isFirstSnapshot = true;
 
@@ -50,9 +31,6 @@ class _NotificationBellState extends State<NotificationBell> {
     }
   }
 
-  // Snapshot pertama berisi SEMUA tugas yang sudah ada (Firestore
-  // melaporkannya sebagai "added"), jadi dilewati supaya tidak memicu
-  // notifikasi dadakan untuk tugas lama setiap kali Dashboard dibuka.
   void _checkForNewTasks(QuerySnapshot<Object?> snapshot) {
     if (_isFirstSnapshot) {
       _isFirstSnapshot = false;

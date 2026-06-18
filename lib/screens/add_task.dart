@@ -22,13 +22,13 @@ class _AddTaskPageState extends State<AddTaskPage> {
   String? _selectedCategory;
   bool _isSaving = false;
 
-  // Subtask controllers dikelola dalam satu list agar mudah di-dispose
+  
   List<TextEditingController> _subtaskControllers = [
     TextEditingController(),
   ];
   List<bool> _subtaskDone = [false];
 
-  // ─── DISPOSE semua controller ──────────────────────────────────
+  
   @override
   void dispose() {
     _titleController.dispose();
@@ -112,9 +112,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       return;
     }
 
-    // Dashboard mengurutkan & menampilkan task berdasarkan field 'date',
-    // jadi deadline wajib diisi — kalau tidak, task ini tidak akan pernah
-    // muncul di daftar "Upcoming tasks".
+    
     if (_selectedDeadline == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -125,8 +123,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       return;
     }
 
-    // Dashboard menampilkan category langsung lewat Text(task["category"]),
-    // yang akan error kalau nilainya null.
+    
     if (_selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -151,7 +148,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     setState(() => _isSaving = true);
 
     try {
-      // Bangun list subtask — lewati subtask yang judulnya dibiarkan kosong
+      
       final subtaskList = List.generate(
         _subtaskControllers.length,
         (i) => {
@@ -160,31 +157,26 @@ class _AddTaskPageState extends State<AddTaskPage> {
         },
       ).where((s) => (s['title'] as String).isNotEmpty).toList();
 
-      // Simpan ke Firestore — listener di Dashboard akan otomatis
-      // mendeteksi dokumen baru ini dan memperbarui tampilan secara real-time.
+      
       final docRef = await FirebaseFirestore.instance.collection('tasks').add({
         'title': title,
         'description': _descController.text.trim(),
         'subtasks': subtaskList,
         'category': _selectedCategory,
-        // 'date' dalam format ISO (yyyy-MM-dd) supaya orderBy("date") di
-        // Dashboard mengurutkan tugas secara kronologis dengan benar.
+        
         'date': _formatIsoDate(_selectedDeadline!),
         'deadline': Timestamp.fromDate(_selectedDeadline!),
         'reminder': _selectedReminder != null
             ? Timestamp.fromDate(_selectedReminder!)
-            : null,
-        // Flag terpisah supaya gampang di-query oleh halaman notifikasi
-        // (Firestore agak rumit kalau query langsung pakai != null).
+            : null
+        
         'hasReminder': _selectedReminder != null,
-        // 'uid' (bukan 'userId') — samakan dengan field yang dipakai
-        // dashboard.dart untuk memfilter task milik user yang login.
+.
         'uid': user.uid,
         'createdAt': Timestamp.now(),
       });
 
-      // Jadwalkan local notification kalau reminder diset. Notifikasi ini
-      // akan tetap muncul di notification tray HP walau aplikasi ditutup.
+      
       if (_selectedReminder != null) {
         await NotificationService().scheduleNotification(
           id: NotificationService.idFromDocId(docRef.id),
@@ -196,8 +188,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         );
       }
 
-      // Tampilkan SnackBar SEBELUM pop agar context masih valid.
-      // Gunakan mounted guard untuk keamanan ekstra.
+      
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -207,8 +198,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         ),
       );
 
-      // Reset form (kalau AddTaskPage ditampilkan sebagai tab di dalam
-      // Dashboard, cukup reset — tidak perlu pop).
+
       _resetForm();
     } catch (e) {
       if (!mounted) return;
@@ -236,10 +226,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     }
   }
 
-  // Format tanggal jadi String ISO "yyyy-MM-dd" (zero-padded) supaya
-  // Firestore .orderBy("date") di Dashboard mengurutkan tugas secara
-  // kronologis dengan benar (string "2/6/2026" vs "10/6/2026" akan
-  // terurut salah kalau tidak di-pad seperti ini).
+  
   String _formatIsoDate(DateTime date) {
     final y = date.year.toString().padLeft(4, '0');
     final m = date.month.toString().padLeft(2, '0');
@@ -253,8 +240,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
 
-      // AppBar hanya tampil jika halaman ini di-push sebagai route baru
-      // (bukan sebagai tab). Jika ingin selalu tampil, hapus kondisi ini.
+    
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,

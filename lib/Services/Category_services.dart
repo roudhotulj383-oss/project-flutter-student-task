@@ -3,9 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CategoryService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // ══════════════════════════════════════════════
-  // GET ALL CATEGORIES
-  // ══════════════════════════════════════════════
+  
   Stream<QuerySnapshot<Map<String, dynamic>>> getCategories() {
     return _firestore
         .collection('categories')
@@ -13,9 +11,6 @@ class CategoryService {
         .snapshots();
   }
 
-  // ══════════════════════════════════════════════
-  // ADD CATEGORY
-  // ══════════════════════════════════════════════
   Future<void> addCategory({
     required String name,
     required String description,
@@ -27,9 +22,6 @@ class CategoryService {
     });
   }
 
-  // ══════════════════════════════════════════════
-  // UPDATE CATEGORY
-  // ══════════════════════════════════════════════
   Future<void> updateCategory({
     required String id,
     required String name,
@@ -42,18 +34,12 @@ class CategoryService {
     });
   }
 
-  // ══════════════════════════════════════════════
-  // DELETE CATEGORY
-  // ══════════════════════════════════════════════
+
   Future<void> deleteCategory(String categoryId) async {
     await _firestore.collection('categories').doc(categoryId).delete();
   }
 
-  // ══════════════════════════════════════════════
-  // CHECK CATEGORY HAS TASKS
-  // ✅ FIX: query pakai field 'category' (nama string),
-  //         bukan 'categoryId' — sesuai yang disimpan add_task.dart
-  // ══════════════════════════════════════════════
+  
   Future<bool> hasTasks(String categoryId) async {
     // Ambil nama kategori dulu dari ID-nya
     final catDoc =
@@ -70,13 +56,9 @@ class CategoryService {
     return snapshot.docs.isNotEmpty;
   }
 
-  // ══════════════════════════════════════════════
-  // GET TASK COUNT PER CATEGORY
-  // ✅ FIX: query pakai field 'category' (nama string),
-  //         bukan 'categoryId'
-  // ══════════════════════════════════════════════
+  
   Future<int> getTaskCount(String categoryId) async {
-    // Ambil nama kategori dulu dari ID-nya
+
     final catDoc =
         await _firestore.collection('categories').doc(categoryId).get();
     if (!catDoc.exists) return 0;
@@ -90,9 +72,7 @@ class CategoryService {
     return snapshot.docs.length;
   }
 
-  // ══════════════════════════════════════════════
-  // GET CATEGORY BY ID
-  // ══════════════════════════════════════════════
+  
   Future<DocumentSnapshot<Map<String, dynamic>>> getCategoryById(
       String categoryId) async {
     return await _firestore.collection('categories').doc(categoryId).get();
