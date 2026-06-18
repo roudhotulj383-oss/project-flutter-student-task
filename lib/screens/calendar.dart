@@ -39,16 +39,18 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      backgroundColor: Colors.grey[200],
-
-      appBar: AppBar(
-        title: const Text("Calendar"),
-        centerTitle: true,
-      ),
-
-      body: Column(
+    // Catatan: tidak ada Scaffold/AppBar di sini lagi — halaman ini dipakai
+    // sebagai salah satu tab di dalam Scaffold milik DashboardPage (lewat
+    // IndexedStack), bukan halaman terpisah yang di-push. FloatingActionButton
+    // yang dulu ada di sini juga dipindah jadi tombol "+" kecil di sebelah
+    // judul tanggal, supaya tidak berebut posisi dengan FAB "Add Task"
+    // milik Dashboard.
+    return Container(
+      color: Colors.grey[200],
+      child: Column(
         children: [
+
+          const SizedBox(height: 8),
 
           /// CALENDAR
           Container(
@@ -112,21 +114,28 @@ class _CalendarPageState extends State<CalendarPage> {
 
           const SizedBox(height: 10),
 
-          /// TITLE TASK
+          /// TITLE TASK + TOMBOL TAMBAH
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
 
-            child: Align(
-              alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    "Task ${today.day}/${today.month}/${today.year}",
 
-              child: Text(
-                "Task ${today.day}/${today.month}/${today.year}",
-
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
                 ),
-              ),
+                IconButton(
+                  onPressed: () => _showAddTaskDialog(context),
+                  icon: const Icon(Icons.add_circle,
+                      color: Colors.blue, size: 28),
+                ),
+              ],
             ),
           ),
 
@@ -143,92 +152,84 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ],
       ),
+    );
+  }
 
-      /// FLOATING BUTTON
-      floatingActionButton:
-          FloatingActionButton(
+  /// DIALOG TAMBAH TASK (logikanya sama seperti sebelumnya, cuma
+  /// pemicunya sekarang tombol "+" di sebelah judul tanggal)
+  void _showAddTaskDialog(BuildContext context) {
+    showDialog(
+      context: context,
 
-        backgroundColor: Colors.blue,
+      builder: (context) {
 
-        onPressed: () {
+        TextEditingController
+            taskController =
+            TextEditingController();
 
-          showDialog(
-            context: context,
+        return AlertDialog(
 
-            builder: (context) {
+          title: const Text(
+            "Add Task",
+          ),
 
-              TextEditingController
-                  taskController =
-                  TextEditingController();
+          content: TextField(
+            controller: taskController,
 
-              return AlertDialog(
+            decoration:
+                const InputDecoration(
+              hintText:
+                  "Input task",
+            ),
+          ),
 
-                title: const Text(
-                  "Add Task",
-                ),
+          actions: [
 
-                content: TextField(
-                  controller: taskController,
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
 
-                  decoration:
-                      const InputDecoration(
-                    hintText:
-                        "Input task",
-                  ),
-                ),
+              child: const Text(
+                "Cancel",
+              ),
+            ),
 
-                actions: [
+            ElevatedButton(
+              onPressed: () {
 
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                DateTime key =
+                    DateTime.utc(
+                  today.year,
+                  today.month,
+                  today.day,
+                );
 
-                    child: const Text(
-                      "Cancel",
-                    ),
-                  ),
+                if (tasks[key] != null) {
 
-                  ElevatedButton(
-                    onPressed: () {
+                  tasks[key]!.add(
+                    taskController.text,
+                  );
 
-                      DateTime key =
-                          DateTime.utc(
-                        today.year,
-                        today.month,
-                        today.day,
-                      );
+                } else {
 
-                      if (tasks[key] != null) {
+                  tasks[key] = [
+                    taskController.text,
+                  ];
+                }
 
-                        tasks[key]!.add(
-                          taskController.text,
-                        );
+                setState(() {});
 
-                      } else {
+                Navigator.pop(context);
+              },
 
-                        tasks[key] = [
-                          taskController.text,
-                        ];
-                      }
-
-                      setState(() {});
-
-                      Navigator.pop(context);
-                    },
-
-                    child: const Text(
-                      "Save",
-                    ),
-                  ),
-                ],
-              );
-            },
-          );
-        },
-
-        child: const Icon(Icons.add),
-      ),
+              child: const Text(
+                "Save",
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

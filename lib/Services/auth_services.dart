@@ -44,6 +44,8 @@ class AuthService {
         'name': name,
         'email': email,
         'role': role,
+       
+       
         'nim': '',
         'createdAt': Timestamp.now(),
       });

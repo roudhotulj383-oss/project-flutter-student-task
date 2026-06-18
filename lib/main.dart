@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'firebase_options.dart';
+import 'theme_notif.dart';
 
 import 'screens/welcome.dart';
 import 'screens/Auth/login.dart';
@@ -15,6 +16,10 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // Muat preferensi mode gelap yang tersimpan sebelum app dijalankan
+  await ThemeNotifier.loadTheme();
+  
+
   runApp(const MyApp());
 }
 
@@ -23,24 +28,38 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: ThemeNotifier.themeMode,
+      builder: (context, mode, _) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
 
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.blue,
-      ),
+          theme: ThemeData(
+            useMaterial3: true,
+            colorSchemeSeed: Colors.blue,
+            brightness: Brightness.light,
+          ),
 
-      initialRoute: '/',
+          darkTheme: ThemeData(
+            useMaterial3: true,
+            colorSchemeSeed: Colors.blue,
+            brightness: Brightness.dark,
+          ),
 
-      routes: {
-        '/': (context) => const WelcomeTo(),
+          themeMode: mode,
 
-        '/login': (context) => const LoginScreen(),
+          initialRoute: '/',
 
-        '/register': (context) => const RegisterScreen(),
+          routes: {
+            '/': (context) => const WelcomeTo(),
 
-        '/dashboard': (context) => const Dashboard(),
+            '/login': (context) => const LoginScreen(),
+
+            '/register': (context) => const RegisterScreen(),
+
+            '/dashboard': (context) => const DashboardPage (),
+          },
+        );
       },
     );
   }

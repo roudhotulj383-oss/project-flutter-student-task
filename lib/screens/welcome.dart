@@ -20,7 +20,7 @@ class WelcomeTo extends StatelessWidget {
               children: [
 
                 Image.asset(
-                  'images/welcome.png',
+                 'assets/images/welcome.png',
                   width: 220,
                 ),
 
